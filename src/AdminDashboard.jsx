@@ -1,70 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import './AdminDashboard.css';
-import config from './config';
+import { getUsers, updateUserRole } from './data';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`${config.url}/api/admin/all-users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: 'jsnstore@gmail.com',
-          username: 'jsn',
-          password: 'jsn'
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data);
-      } else {
-        console.error('Failed to fetch users');
-      }
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchUsers();
+    setUsers(getUsers());
+    setLoading(false);
   }, []);
 
   const managers = users.filter(user => user.role?.toLowerCase() === 'manager');
   const customers = users.filter(user => user.role?.toLowerCase() === 'customer');
 
-  const handleRoleUpdate = async (email, newRole) => {
-    try {
-      const response = await fetch(`${config.url}/api/admin/update-customer-role/${email}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Admin-Email': 'jsnstore@gmail.com',
-          'X-Admin-Username': 'jsn',
-          'X-Admin-Password': 'jsn'
-        },
-        body: JSON.stringify({ role: newRole })
-      });
-
-      const result = await response.text();
-      alert(result);
-
-      if (response.ok) {
-        setUsers(prev =>
-          prev.map(user =>
-            user.email === email ? { ...user, role: newRole } : user
-          )
-        );
-      }
-    } catch (error) {
-      console.error('Error updating role:', error);
+  const handleRoleUpdate = (email, newRole) => {
+    const success = updateUserRole(email, newRole);
+    if (success) {
+      alert(`Role updated to ${newRole}`);
+      setUsers(prev =>
+        prev.map(user =>
+          user.email === email ? { ...user, role: newRole } : user
+        )
+      );
+    } else {
+      alert("Failed to update role.");
     }
   };
 
@@ -78,7 +38,7 @@ const AdminDashboard = () => {
         <thead>
           <tr>
             <th>Email</th>
-            <th>Username</th>
+            <th>Name</th>
             <th>Phone</th>
             <th>Role</th>
             <th>Actions</th>
@@ -93,7 +53,7 @@ const AdminDashboard = () => {
             data.map(user => (
               <tr key={user.email}>
                 <td className="user-email">{user.email}</td>
-                <td>{user.username}</td>
+                <td>{user.name}</td>
                 <td>{user.phno || 'N/A'}</td>
                 <td>
                   <span className={`user-role role-${user.role?.toLowerCase()}`}>
@@ -123,9 +83,6 @@ const AdminDashboard = () => {
           <h1 className="admin-title">Admin Dashboard</h1>
           <p className="admin-subtitle">Manage user roles and permissions</p>
         </div>
-        <div className="admin-actions">
-          {/* Add action buttons if needed */}
-        </div>
       </div>
 
       <div className="dashboard-stats">
@@ -149,8 +106,8 @@ const AdminDashboard = () => {
         </div>
       ) : (
         <>
-          {renderTable('Manager Users', managers, 'Make Customer', 'customer', 'No managers found.', "danger")}
-          {renderTable('Customer Users', customers, 'Make Manager', 'manager', 'No customers found.')}
+          {renderTable('Manager Users', managers, 'Make Customer', 'Customer', 'No managers found.', "danger")}
+          {renderTable('Customer Users', customers, 'Make Manager', 'Manager', 'No customers found.')}
         </>
       )}
     </div>

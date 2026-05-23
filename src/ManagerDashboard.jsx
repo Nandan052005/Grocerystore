@@ -1,65 +1,53 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import "./ManagerDashboard.css";
-import config from "./config";
+import { getProducts, addProduct, deleteProduct, getProductEmoji, getCategoryColor } from "./data";
 
 export default function ManagerDashboard() {
   const [form, setForm] = useState({
-    pid: "",
     pname: "",
     pprs: "",
     pcategory: "",
     quantity: "",
   });
-  const [imageFile, setImageFile] = useState(null);
   const [items, setItems] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
-    fetchItems();
+    setItems(getProducts());
   }, []);
-
-  const fetchItems = () => {
-    axios.get(`${config.url}/items`)
-      .then(res => setItems(res.data))
-      .catch(() => setErrorMsg("Failed to fetch items."));
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e) => {
-    setImageFile(e.target.files[0]);
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!imageFile) return setErrorMsg("Please select an image file.");
-
-    const formData = new FormData();
-    for (let key in form) formData.append(key, form[key]);
-    formData.append("image", imageFile);
-
-    try {
-      const res = await axios.post(`${config.url}/items`, formData);
-      setItems([...items, res.data]);
-      setForm({ pid: "", pname: "", pprs: "", pcategory: "", quantity: "" });
-      setImageFile(null);
-      setErrorMsg("");
-    } catch {
-      setErrorMsg("Error adding item.");
+    if (!form.pname || !form.pprs || !form.pcategory || !form.quantity) {
+      setErrorMsg("All fields are required.");
+      return;
     }
+
+    const newProduct = addProduct({
+      pname: form.pname,
+      pprs: Number(form.pprs),
+      pcategory: form.pcategory.toLowerCase(),
+      quantity: Number(form.quantity),
+    });
+
+    setItems([...items, newProduct]);
+    setForm({ pname: "", pprs: "", pcategory: "", quantity: "" });
+    setErrorMsg("");
+    setSuccessMsg(`"${newProduct.pname}" added successfully!`);
+    setTimeout(() => setSuccessMsg(""), 3000);
   };
 
-  const handleDelete = async (pid) => {
-    try {
-      await axios.delete(`${config.url}/items/${pid}`);
-      setItems(items.filter(item => item.pid !== pid));
-    } catch {
-      setErrorMsg("Error deleting item.");
-    }
+  const handleDelete = (pid) => {
+    deleteProduct(pid);
+    setItems(items.filter(item => item.pid !== pid));
+    setSuccessMsg("Item deleted.");
+    setTimeout(() => setSuccessMsg(""), 3000);
   };
 
   return (
@@ -67,23 +55,22 @@ export default function ManagerDashboard() {
       <h1>Manager Dashboard</h1>
 
       <form onSubmit={handleSubmit} className="dashboard-form">
-        <input name="pid" placeholder="PID" value={form.pid} onChange={handleChange} required />
-        <input name="pname" placeholder="Name" value={form.pname} onChange={handleChange} required />
-        <input name="pprs" placeholder="Price" value={form.pprs} onChange={handleChange} required />
+        <input name="pname" placeholder="Product Name" value={form.pname} onChange={handleChange} required />
+        <input name="pprs" placeholder="Price (₹)" type="number" value={form.pprs} onChange={handleChange} required />
         <input name="pcategory" placeholder="Category" value={form.pcategory} onChange={handleChange} required />
-        <input name="quantity" placeholder="Quantity" value={form.quantity} onChange={handleChange} required />
-        <input type="file" onChange={handleImageChange} accept="image/*" required />
+        <input name="quantity" placeholder="Quantity" type="number" value={form.quantity} onChange={handleChange} required />
         <button type="submit">Add Item</button>
       </form>
 
       {errorMsg && <p className="error-message">{errorMsg}</p>}
+      {successMsg && <p style={{ color: 'green', fontWeight: 'bold', marginBottom: '1rem' }}>{successMsg}</p>}
 
       <table className="dashboard-table">
         <thead>
           <tr>
-            <th>PID</th>
+            <th>ID</th>
             <th>Name</th>
-            <th>Image</th>
+            <th>Icon</th>
             <th>Price</th>
             <th>Category</th>
             <th>Quantity</th>
@@ -96,21 +83,22 @@ export default function ManagerDashboard() {
               <td>{item.pid}</td>
               <td>{item.pname}</td>
               <td>
-                <img
-                  src={`${config.url}/images/${item.pimg}`}
-                  alt={item.pname}
-                  onError={e => { e.target.onerror = null; e.target.src = "/default.png"; }}
-                  style={{ height: "48px", width: "48px", objectFit: "cover" }}
-                />
+                <span style={{
+                  fontSize: '1.5rem',
+                  display: 'inline-block',
+                  width: '40px', height: '40px',
+                  lineHeight: '40px', textAlign: 'center',
+                  borderRadius: '8px',
+                  backgroundColor: getCategoryColor(item.pcategory)
+                }}>
+                  {getProductEmoji(item)}
+                </span>
               </td>
-              <td>{item.pprs}</td>
+              <td>₹{item.pprs}</td>
               <td>{item.pcategory}</td>
               <td>{item.quantity}</td>
               <td>
-                <button
-                  onClick={() => handleDelete(item.pid)}
-                  className="delete-btn"
-                >
+                <button onClick={() => handleDelete(item.pid)} className="delete-btn">
                   Delete
                 </button>
               </td>

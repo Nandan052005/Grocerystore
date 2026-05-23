@@ -1,8 +1,7 @@
-import axios from "axios";
 import React, { useState } from "react";
 import './SignUpPage.css';
-import config from "./config";
 import { useNavigate } from "react-router-dom";
+import { signupUser } from "./data";
 
 export default function Signup() {
     const navigate = useNavigate();
@@ -26,21 +25,13 @@ export default function Signup() {
             return;
         }
 
-        axios.post(`${config.url}/api/signup`, {
-            name,
-            email,
-            password,
-            role,
-            phno
-        })
-        .then((res) => {
-            alert("Signup successful!");
+        try {
+            signupUser({ name, email, password, role, phno });
+            alert("Signup successful! Please login.");
             navigate("/login");
-        })
-        .catch((err) => {
-            console.error("Signup error:", err);
-            alert(`Error: ${err.response?.data || err.message}`);
-        });
+        } catch (err) {
+            alert(err.message);
+        }
     };
 
     return (
@@ -48,48 +39,23 @@ export default function Signup() {
             <h2>Signup Form</h2>
             <label>
                 Name:
-                <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                />
+                <input type="text" name="name" value={formData.name} onChange={handleChange} />
             </label>
             <label>
                 Email:
-                <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} />
             </label>
             <label>
                 Phone:
-                <input
-                    type="tel"
-                    name="phno"
-                    value={formData.phno}
-                    onChange={handleChange}
-                    pattern="[0-9]{10}"
-                />
+                <input type="tel" name="phno" value={formData.phno} onChange={handleChange} pattern="[0-9]{10}" />
             </label>
             <label>
                 Password:
-                <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
+                <input type="password" name="password" value={formData.password} onChange={handleChange} />
             </label>
             <label>
                 Role:
-                <select
-                    name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                >
+                <select name="role" value={formData.role} onChange={handleChange}>
                     <option value="">Select Role</option>
                     <option value="Customer">Customer</option>
                     <option value="Manager">Manager</option>

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { CartContext } from "./CartContext";
 import { useNavigate } from "react-router-dom";
 import "./Cart.css";
-import config from "./config";
+import { getProductEmoji, getCategoryColor } from "./data";
 
 function Cart() {
   const { cart, increment, decrement } = useContext(CartContext);
@@ -27,15 +27,10 @@ function Cart() {
       <div className="cart-items">
         {cart.map((item) => (
           <div key={item.pid} className="cart-item-card">
-            <img
-              src={`${config.url}/images/${item.pimg}`}
-              alt={item.pname}
-              className="cart-img-small"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "/default-placeholder.png";
-              }}
-            />
+            <div className="cart-emoji-display"
+              style={{ backgroundColor: getCategoryColor(item.pcategory) }}>
+              <span>{getProductEmoji(item)}</span>
+            </div>
             <h3 className="cart-item-name">{item.pname}</h3>
             <p className="cart-item-price">Price: ₹{item.pprs}</p>
             <div className="quantity-control">
