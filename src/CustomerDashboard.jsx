@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "./CustomerDashboard.css";
 import { CartContext } from "./CartContext";
+import config from "./config";
 
 const CustomerDashboard = () => {
   const { addToCart } = useContext(CartContext);
@@ -13,7 +14,7 @@ const CustomerDashboard = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/items")
+      .get(`${config.url}/items`)
       .then((res) => setItems(res.data))
       .catch((err) => console.error("Error:", err));
 
@@ -74,7 +75,7 @@ const CustomerDashboard = () => {
         </div>
         <ul className="menu">
           <li><Link className="nav-link" to="/">Home</Link></li>
-          <li><Link className="nav-link" to="/CustomerDashboard">Shop</Link></li>
+          <li><Link className="nav-link" to="/customerdashboard">Shop</Link></li>
           <li><Link className="nav-link" to="/cart">🛒 Cart</Link></li>
           <li><span className="nav-link">{customerName}</span></li>
         </ul>
@@ -84,7 +85,7 @@ const CustomerDashboard = () => {
         {filteredItems.map((item) => (
           <div key={item.pid} className="item-card">
             <img
-              src={`http://localhost:8080/images/${item.pimg}`}
+              src={`${config.url}/images/${item.pimg}`}
               alt={item.pname}
               onError={(e) => {
                 e.target.onerror = null;

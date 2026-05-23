@@ -5,12 +5,12 @@ export default function Dairy() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    navigate("/Login");
+    navigate("/login");
   };
 
   const handleSignup = () => {
-    navigate("/SignUp");
-  }
+    navigate("/signup");
+  };
   return (
     <div>
       <header className="header">

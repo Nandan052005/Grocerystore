@@ -15,7 +15,7 @@ import AdminDashboard from "./AdminDashboard.jsx";
 import CustomerDashboard from "./CustomerDashboard.jsx";
 import ManagerDashboard from "./ManagerDashboard.jsx";
 import { CartProvider } from "./CartContext.jsx"; // ✅ Import CartProvider
-import Cart from "./cart.jsx";
+import Cart from "./Cart.jsx";
 import PaymentPage from "./PaymentPage.jsx";
 
 createRoot(document.getElementById("root")).render(
@@ -31,9 +31,9 @@ createRoot(document.getElementById("root")).render(
           <Route path="/dairy" element={<Dairy />} />
           <Route path="/about" element={<About />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+          <Route path="/admindashboard" element={<AdminDashboard />} />
           <Route path="/customerdashboard" element={<CustomerDashboard />} />
-          <Route path="/Managerdashboard" element={<ManagerDashboard />} />
+          <Route path="/managerdashboard" element={<ManagerDashboard />} />
           <Route path="/cart" element={<Cart/>}/>
           <Route path="/payment" element={<PaymentPage/>}/>
         </Routes>

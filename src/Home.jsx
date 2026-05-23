@@ -9,13 +9,13 @@ export default function Home() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleLogin = () => navigate("/Login");
-  const handleSignup = () => navigate("/SignUp");
-  const handleAbout = () => navigate("/About");
+  const handleLogin = () => navigate("/login");
+  const handleSignup = () => navigate("/signup");
+  const handleAbout = () => navigate("/about");
   
-  const goToFruits = () => navigate("/Fruits");
-  const goToVegetables = () => navigate("/Vegetables");
-  const goToDairy = () => navigate("/Dairy");
+  const goToFruits = () => navigate("/fruits");
+  const goToVegetables = () => navigate("/vegetables");
+  const goToDairy = () => navigate("/dairy");
 
   const sections = [
     {

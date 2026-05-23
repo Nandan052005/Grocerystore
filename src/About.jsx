@@ -3,7 +3,7 @@ import './About.css';
 export default function About() {
   return (
     <section className="container">
-      <h className="title">About Page</h>
+      <h1 className="title">About Page</h1>
       <p className="text">
         Welcome to <span className="highlight">FreshMart</span>, your go-to online grocery store for fresh and quality products at your doorstep. We aim to provide a seamless shopping experience with a wide range of groceries, organic produce, and household essentials.
       </p>

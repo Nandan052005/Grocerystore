@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./ManagerDashboard.css";
+import config from "./config";
 
 export default function ManagerDashboard() {
   const [form, setForm] = useState({
@@ -19,7 +20,7 @@ export default function ManagerDashboard() {
   }, []);
 
   const fetchItems = () => {
-    axios.get("http://localhost:8080/items")
+    axios.get(`${config.url}/items`)
       .then(res => setItems(res.data))
       .catch(() => setErrorMsg("Failed to fetch items."));
   };
@@ -42,7 +43,7 @@ export default function ManagerDashboard() {
     formData.append("image", imageFile);
 
     try {
-      const res = await axios.post("http://localhost:8080/items", formData);
+      const res = await axios.post(`${config.url}/items`, formData);
       setItems([...items, res.data]);
       setForm({ pid: "", pname: "", pprs: "", pcategory: "", quantity: "" });
       setImageFile(null);
@@ -54,7 +55,7 @@ export default function ManagerDashboard() {
 
   const handleDelete = async (pid) => {
     try {
-      await axios.delete(`http://localhost:8080/items/${pid}`);
+      await axios.delete(`${config.url}/items/${pid}`);
       setItems(items.filter(item => item.pid !== pid));
     } catch {
       setErrorMsg("Error deleting item.");
@@ -96,7 +97,7 @@ export default function ManagerDashboard() {
               <td>{item.pname}</td>
               <td>
                 <img
-                  src={`http://localhost:8080/images/${item.pimg}`}
+                  src={`${config.url}/images/${item.pimg}`}
                   alt={item.pname}
                   onError={e => (e.target.src = "/default.png")}
                   style={{ height: "48px", width: "48px", objectFit: "cover" }}

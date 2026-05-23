@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { CartContext } from "./CartContext";
 import { useNavigate } from "react-router-dom";
 import "./Cart.css";
+import config from "./config";
 
 function Cart() {
   const { cart, increment, decrement } = useContext(CartContext);
@@ -27,7 +28,7 @@ function Cart() {
         {cart.map((item) => (
           <div key={item.pid} className="cart-item-card">
             <img
-              src={`http://localhost:8080/${item.pimg}`}
+              src={`${config.url}/images/${item.pimg}`}
               alt={item.pname}
               className="cart-img-small"
               onError={(e) => {

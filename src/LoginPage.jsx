@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
+import config from './config';
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:8080/api/login', {
+            const response = await fetch(`${config.url}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,13 +41,13 @@ const LoginPage = () => {
 
                 switch (data.role?.toLowerCase()) {
                     case 'admin':
-                        navigate('/AdminDashboard');
+                        navigate('/admindashboard');
                         break;
                     case 'manager':
-                        navigate('/ManagerDashboard');
+                        navigate('/managerdashboard');
                         break;
                     case 'customer':
-                        navigate('/CustomerDashboard');
+                        navigate('/customerdashboard');
                         break;
                     default:
                         alert("Unknown user role: " + data.role);

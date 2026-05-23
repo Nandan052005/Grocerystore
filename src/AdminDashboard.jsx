@@ -1,6 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
 import './AdminDashboard.css';
+import config from './config';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -8,7 +8,7 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/admin/all-users', {
+      const response = await fetch(`${config.url}/api/admin/all-users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ const AdminDashboard = () => {
 
   const handleRoleUpdate = async (email, newRole) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/admin/update-customer-role/${email}`, {
+      const response = await fetch(`${config.url}/api/admin/update-customer-role/${email}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

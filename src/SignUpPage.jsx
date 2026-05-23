@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
-import './SignupPage.css';
+import './SignUpPage.css';
+import config from "./config";
 
 export default function Signup() {
     const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ export default function Signup() {
             return;
         }
 
-        axios.post("http://localhost:8080/api/signup", {
+        axios.post(`${config.url}/api/signup`, {
             username,
             email,
             password,

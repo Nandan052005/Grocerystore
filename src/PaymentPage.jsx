@@ -1,26 +1,12 @@
-// import React from "react";
-
-// function PaymentPage() {
-//   return (
-//     <div className="payment-container text-center mt-20">
-//       <h2 className="text-3xl font-bold mb-6">💳 Payment Page</h2>
-//       <p className="mb-4">This is a placeholder for your payment gateway or form.</p>
-//       <button
-//         onClick={() => alert("Payment Successful!")}
-//         className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-full"
-//       >
-//         Pay Now
-//       </button>
-//     </div>
-//   );
-// }
-
-// export default PaymentPage;
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { CartContext } from "./CartContext";
 import "./PaymentPage.css";
 
 function PaymentPage() {
+  const { cart, placeOrder } = useContext(CartContext);
+  const navigate = useNavigate();
+
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [formData, setFormData] = useState({
     cardName: "",
@@ -34,19 +20,10 @@ function PaymentPage() {
     saveInfo: false
   });
 
-  // Sample order summary data
-  const orderSummary = {
-    subtotal: 2499,
-    shipping: 99,
-    tax: 250,
-    total: 2848,
-    items: [
-      { name: "Premium Headphones", price: 1499, quantity: 1 },
-      { name: "Wireless Mouse", price: 499, quantity: 1 },
-      { name: "USB-C Cable", price: 299, quantity: 1 },
-      { name: "Screen Protector", price: 199, quantity: 1 }
-    ]
-  };
+  const subtotal = cart.reduce((sum, item) => sum + item.quantity * item.pprs, 0);
+  const shipping = subtotal > 0 ? 99 : 0;
+  const tax = Math.round(subtotal * 0.1);
+  const total = subtotal + shipping + tax;
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -62,7 +39,8 @@ function PaymentPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Payment Successful! Order placed.");
+    placeOrder();
+    navigate("/customerdashboard");
   };
 
   return (
@@ -268,7 +246,44 @@ function PaymentPage() {
           </form>
         </div>
 
-        
+        <div className="order-summary">
+          <h2>Order Summary</h2>
+          <div className="order-items">
+            {cart.map((item) => (
+              <div key={item.pid} className="order-item">
+                <div className="item-info">
+                  <span className="item-quantity">x{item.quantity}</span>
+                  <span className="item-name">{item.pname}</span>
+                </div>
+                <span className="item-price">₹{item.pprs * item.quantity}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="price-breakdown">
+            <div className="price-row">
+              <span>Subtotal</span>
+              <span>₹{subtotal}</span>
+            </div>
+            <div className="price-row">
+              <span>Shipping</span>
+              <span>₹{shipping}</span>
+            </div>
+            <div className="price-row">
+              <span>Estimated Tax</span>
+              <span>₹{tax}</span>
+            </div>
+            <div className="price-row total">
+              <span>Total</span>
+              <span>₹{total}</span>
+            </div>
+          </div>
+
+          <div className="secure-checkout">
+            <span className="secure-icon">🔒</span>
+            <p>Secure SSL Encrypted Checkout</p>
+          </div>
+        </div>
       </div>
     </div>
   );

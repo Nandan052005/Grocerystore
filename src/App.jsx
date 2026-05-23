@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminDashboard from "./AdminDashboard";
 import CustomerDashboard from "./CustomerDashboard";
-import Cart from "./cart";
+import Cart from "./Cart";
 import ForgotPassword from "./ForgotPassword";
 
 function App() {
