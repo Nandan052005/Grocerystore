@@ -23,7 +23,7 @@ function Cart() {
 
   return (
     <div className="cart-container">
-      <h2 className="text-center text-2xl font-bold mb-6">🛍️ Your Cart</h2>
+      <h2 className="cart-title">🛍️ Your Cart</h2>
       <div className="cart-items">
         {cart.map((item) => (
           <div key={item.pid} className="cart-item-card">
@@ -36,8 +36,8 @@ function Cart() {
                 e.target.src = "/default-placeholder.png";
               }}
             />
-            <h3 className="text-lg font-semibold capitalize">{item.pname}</h3>
-            <p className="text-green-700 font-medium">Price: ₹{item.pprs}</p>
+            <h3 className="cart-item-name">{item.pname}</h3>
+            <p className="cart-item-price">Price: ₹{item.pprs}</p>
             <div className="quantity-control">
               <button onClick={() => decrement(item.pid)}>-</button>
               <span>{item.quantity}</span>
@@ -48,15 +48,12 @@ function Cart() {
         ))}
       </div>
 
-      <div className="text-center mt-6">
-        <h3 className="text-xl font-bold text-gray-800">🧾 Total Bill: ₹{totalBill}</h3>
+      <div className="cart-total-section">
+        <h3 className="cart-total">🧾 Total Bill: ₹{totalBill}</h3>
       </div>
 
-      <div className="text-center mt-4">
-        <button
-          onClick={handlePlaceOrder}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-full"
-        >
+      <div className="cart-action">
+        <button onClick={handlePlaceOrder} className="place-order-btn">
           ✅ Place Order
         </button>
       </div>

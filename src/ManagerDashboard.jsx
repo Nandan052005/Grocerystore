@@ -91,15 +91,15 @@ export default function ManagerDashboard() {
           </tr>
         </thead>
         <tbody>
-          {items.map((item, i) => (
-            <tr key={i}>
+          {items.map((item) => (
+            <tr key={item.pid}>
               <td>{item.pid}</td>
               <td>{item.pname}</td>
               <td>
                 <img
                   src={`${config.url}/images/${item.pimg}`}
                   alt={item.pname}
-                  onError={e => (e.target.src = "/default.png")}
+                  onError={e => { e.target.onerror = null; e.target.src = "/default.png"; }}
                   style={{ height: "48px", width: "48px", objectFit: "cover" }}
                 />
               </td>
@@ -109,7 +109,7 @@ export default function ManagerDashboard() {
               <td>
                 <button
                   onClick={() => handleDelete(item.pid)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
+                  className="delete-btn"
                 >
                   Delete
                 </button>

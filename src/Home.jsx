@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Fruits from "./Fruits.jpg";
+import Fruits from "./fruits.jpg";
 import Vegetables from "./Vegetables.jpg";
 import spices from "./Spices.jpg";
 import Milk from "./Milk.jpg";

@@ -2,14 +2,16 @@ import axios from "axios";
 import React, { useState } from "react";
 import './SignUpPage.css';
 import config from "./config";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        username: "",
+        name: "",
         email: "",
         password: "",
         role: "",
-        phno: ""  // New field for phno number
+        phno: ""
     });
 
     const handleChange = (e) => {
@@ -17,21 +19,24 @@ export default function Signup() {
     };
 
     const handleSignup = () => {
-        const { username, email, password, role, phno } = formData;
+        const { name, email, password, role, phno } = formData;
 
-        if (!username || !email || !password || !role || !phno) {
+        if (!name || !email || !password || !role || !phno) {
             alert("All fields are required.");
             return;
         }
 
         axios.post(`${config.url}/api/signup`, {
-            username,
+            name,
             email,
             password,
             role,
             phno
         })
-        .then((res) => alert("Signup successful!"))
+        .then((res) => {
+            alert("Signup successful!");
+            navigate("/login");
+        })
         .catch((err) => {
             console.error("Signup error:", err);
             alert(`Error: ${err.response?.data || err.message}`);
@@ -42,11 +47,11 @@ export default function Signup() {
         <div className="signup-container">
             <h2>Signup Form</h2>
             <label>
-                Username:
+                Name:
                 <input
                     type="text"
-                    name="username"
-                    value={formData.username}
+                    name="name"
+                    value={formData.name}
                     onChange={handleChange}
                 />
             </label>
@@ -86,8 +91,8 @@ export default function Signup() {
                     onChange={handleChange}
                 >
                     <option value="">Select Role</option>
-                    <option value="Admin">Admin</option>
                     <option value="Customer">Customer</option>
+                    <option value="Manager">Manager</option>
                 </select>
             </label>
             <button onClick={handleSignup}>Sign Up</button>

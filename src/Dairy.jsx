@@ -22,8 +22,8 @@ export default function Dairy() {
 
         <nav>
           <button className="signup-btn" onClick={handleLogin}>Login</button>
-          <button className="signup-btn">About</button>
-          <button className="signup-btn">Home</button>
+          <button className="signup-btn" onClick={() => navigate("/about")}>About</button>
+          <button className="signup-btn" onClick={() => navigate("/")}>Home</button>
           <button className="signup-btn" onClick={handleSignup}>SignUp</button>
         </nav>
       </header>
